@@ -33,6 +33,7 @@ function TodoList() {
           variant="contained"
           color="primary"
           type="submit"
+          disabled={!input}
           onClick={(e) => {
             handelClick(e);
           }}
@@ -44,7 +45,7 @@ function TodoList() {
         <List>
           {todos.map((todo, index) => (
             <ListItem>
-              <ListItemText primary={todo.task}  /> 
+              <ListItemText primary={todo.task} />
             </ListItem>
           ))}
         </List>
