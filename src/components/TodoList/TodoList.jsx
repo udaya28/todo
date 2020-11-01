@@ -7,17 +7,35 @@ import {
   ListItemText,
   TextField,
 } from '@material-ui/core';
+import db from '../../firebase';
+
+import firebase from 'firebase';
+// import firebase from 'firebase/database'
 
 function TodoList() {
   const [todos, addTodo] = useState([]);
   const [input, setInput] = useState('');
 
+  useEffect(() => {
+    db.collection('todos')
+      .orderBy('timestamp', 'desc')
+      .onSnapshot((snapshot) => {
+        console.log(snapshot.docs.map((doc) => doc.data().task));
+        console.log(snapshot.docs.map((doc) => doc.id));
+        addTodo(snapshot.docs.map((doc) => ({ task: doc.data().task, id: doc.id ,timestamp:doc.data().timestamp})));
+      });
+  }, []);
+
   const handleInput = (e) => {
     setInput(e.target.value);
   };
+
   const handelClick = (e) => {
     e.preventDefault();
-    addTodo([...todos, { task: input, completed: false }]);
+    db.collection('todos').add({
+      task: input,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
     setInput('');
   };
   return (
@@ -44,8 +62,8 @@ function TodoList() {
       <Container maxWidth="sm">
         <List>
           {todos.map((todo, index) => (
-            <ListItem>
-              <ListItemText primary={todo.task} />
+            <ListItem key={todo.id}>
+              <ListItemText primary={todo.task} secondary="Todo" />
             </ListItem>
           ))}
         </List>
