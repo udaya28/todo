@@ -1,5 +1,8 @@
-import firebase from 'firebase';
-// import 'firebase/database';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
+
+
 var firebaseConfig = {
     apiKey: "AIzaSyCmqakoR7omcHqfdPgDYVMJzVTlMbE34vg",
     authDomain: "todo-udaya.firebaseapp.com",
@@ -11,7 +14,12 @@ var firebaseConfig = {
     measurementId: "G-NG7KKZRS2C"
   };
   // Initialize Firebase
- const App = firebase.initializeApp(firebaseConfig);
-  const db = App.firestore();
-   
-export default db;
+const App = firebase.initializeApp(firebaseConfig);
+export const db = App.firestore();
+export const auth = firebase.auth();
+
+const provider = new firebase.auth.GoogleAuthProvider();
+provider.setCustomParameters({prompt:'select_account'});
+export const signInWithGoogle = () => auth.signInWithPopup(provider);
+
+export default firebase;

@@ -7,9 +7,12 @@ import {
   ListItemText,
   TextField,
 } from '@material-ui/core';
-import db from '../../firebase';
+import firebase,{db,auth ,signInWithGoogle} from '../../firebase';
 
-import firebase from 'firebase';
+// signInWithGoogle();
+
+// import firebase from 'firebase';
+// import { auth } from 'firebase-admin';
 // import firebase from 'firebase/database'
 
 function TodoList() {
@@ -24,6 +27,12 @@ function TodoList() {
         console.log(snapshot.docs.map((doc) => doc.id));
         addTodo(snapshot.docs.map((doc) => ({ task: doc.data().task, id: doc.id ,timestamp:doc.data().timestamp})));
       });
+      
+     auth.onAuthStateChanged(user=>console.log(user));
+      return(
+        // firebase.auth().signOut()
+        console.log("logout")
+      )
   }, []);
 
   const handleInput = (e) => {
@@ -37,6 +46,8 @@ function TodoList() {
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
     setInput('');
+    signInWithGoogle();
+    
   };
   return (
     <div>
